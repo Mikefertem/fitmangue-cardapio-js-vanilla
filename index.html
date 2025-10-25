@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FitMangue | Marmitas Fitness</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <h1>🥗 FitMangue</h1>
+  <div class="header-btns">
+    <button id="toggleTheme">🌙</button>
+    <button id="btnCarrinho">🛒 (<span id="qtdCarrinho">0</span>)</button>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-text">
+    <h2>Marmitas Fitness no Mangueiral, Brasília-DF</h2>
+    <p>Saudável, saboroso e entregue na sua casa!</p>
+    <button id="btnHero">Peça Agora</button>
+  </div>
+</section>
+
+<main class="container">
+  <h2 class="titulo-produtos">🍱 Nossas Marmitas</h2>
+  
+  <section class="produtos" id="listaProdutos"></section>
+</main>
+
+<!-- Carrinho Modal -->
+<div id="modalCarrinho" class="modalCarrinho oculto">
+  <div class="modalContent">
+    <span id="fecharCarrinho">&times;</span>
+    <h3>🛒 Seu Carrinho</h3>
+    <ul id="itensCarrinho"></ul>
+    <p id="totalCarrinho"><strong>Total:</strong> R$ 0,00</p>
+    <label>Forma de pagamento:</label>
+    <select id="pagamento">
+      <option value="Pix">Pix</option>
+      <option value="Entrega">Pagamento na Entrega</option>
+      <option value="Cartão">Cartão</option>
+    </select>
+    <button id="btnFinalizar">Finalizar Pedido</button>
+  </div>
+</div>
+
+<!-- Checkout Modal -->
+<div id="modalCheckout" class="modalCarrinho oculto">
+  <div class="modalContent">
+    <h2>🧾 Resumo do Pedido</h2>
+    <div id="resumoPedido"></div>
+    <button id="btnConfirmar">✅ Enviar via WhatsApp</button>
+    <button id="btnVoltar">⬅️ Voltar</button>
+  </div>
+</div>
+
+<footer>
+  <p>📍 FitMangue | Mangueiral - Brasília, DF</p>
+  <p>📞 <a href="https://wa.me/5561999999999" target="_blank">Fale conosco no WhatsApp</a></p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
