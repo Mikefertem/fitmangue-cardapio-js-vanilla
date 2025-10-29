@@ -5,61 +5,97 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FitMangue | Marmitas Fitness</title>
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style2.css">
 </head>
 <body>
 
 <header>
-  <h1>🥗 FitMangue</h1>
-  <div class="header-btns">
-    <button id="toggleTheme">🌙</button>
-    <button id="btnCarrinho">🛒 (<span id="qtdCarrinho">0</span>)</button>
-  </div>
+ <div class="logo">
+  <img id="logoImg" src="img/logoBotanicFit.jpg" alt="BotanicFit">
+  <h1>BotanicFit</h1>
+    </div>
+
+    <div class="header-btns">
+        <button id="toggleTheme">🌙</button>
+                <button id="btnCarrinho">🛒 (<span id="qtdCarrinho">0</span>)</button>
+    </div>
 </header>
 
 <section class="hero">
-  <div class="hero-text">
-    <h2>Marmitas Fitness no Mangueiral, Brasília-DF</h2>
-    <p>Saudável, saboroso e entregue na sua casa!</p>
-    <button id="btnHero">Peça Agora</button>
-  </div>
+    <div class="hero-text">
+        <h2>Marmitas Fitness no Mangueiral, Brasília-DF</h2>
+        <p>Saudável, caseira, saboroso e entregue na sua casa!</p>
+        <button id="btnHero">Peça Agora</button>
+    </div>
 </section>
 
 <main class="container">
-  <h2 class="titulo-produtos">🍱 Nossas Marmitas</h2>
-  
-  <section class="produtos" id="listaProdutos"></section>
+    <h2 class="titulo-produtos">🍱 Nossas Marmitas</h2>
+    <section class="produtos" id="listaProdutos"></section>
 </main>
 
-<!-- Carrinho Modal -->
+<section class="info-secoes">
+    
+    <div class="info-box atencao">
+        <h3 class="info-titulo">🚨 ATENÇÃO: Política de Troca</h3>
+        <p>NÃO REALIZAMOS TROCA DE ITENS, uma vez que o pedido é confirmado e processado.</p>
+        <p>Verifique cuidadosamente os Kits e as quantidades antes de finalizar a compra.</p>
+    </div>
+
+    <div class="info-box entrega">
+        <h3 class="info-titulo">🚚 Envio e Prazo</h3>
+
+        <h4>** Em 24H de antecedência! **</h4>
+        <ul>
+            <li>Dia de entrega **agendado por você** no WhatsApp.</li>
+            <li>**FRETE GRÁTIS** a partir de R$299.00 (verificar disponibilidade de sua região).</li>
+        </ul>
+
+        <h4 class="taxas-titulo">Regiões e Taxas de Entrega:</h4>
+        <div class="tabela-taxas">
+            <ul>
+                <li>Jardins Mangueiral: <strong>Sem Taxa de Entrega</strong></li>
+                <li>Jardim Botânico e São Sebastião: <strong>R$ 10,00</strong></li>
+                <li>Demais localidades: <strong>Consultar Taxa</strong> no WhatsApp.</li>
+            </ul>
+        </div>
+    </div>
+
+</section>
+
 <div id="modalCarrinho" class="modalCarrinho oculto">
-  <div class="modalContent">
-    <span id="fecharCarrinho">&times;</span>
-    <h3>🛒 Seu Carrinho</h3>
-    <ul id="itensCarrinho"></ul>
-    <p id="totalCarrinho"><strong>Total:</strong> R$ 0,00</p>
-    <label>Forma de pagamento:</label>
-    <select id="pagamento">
-      <option value="Pix">Pix</option>
-      <option value="Entrega">Pagamento na Entrega</option>
-      <option value="Cartão">Cartão</option>
-    </select>
-    <button id="btnFinalizar">Finalizar Pedido</button>
-  </div>
+    <div class="modalContent">
+        <span id="fecharCarrinho">&times;</span>
+        <h3>🛒 Seu Carrinho</h3>
+        <ul id="itensCarrinho"></ul>
+        <p id="totalCarrinho"><strong>Total:</strong> R$ 0,00</p>
+        <label>Forma de pagamento:</label>
+        <select id="pagamento">
+            <option value="Pix">Pix</option>
+            <option value="Entrega">Pagamento na Entrega</option>
+            <option value="Cartão">Cartão</option>
+        </select>
+        <button id="btnFinalizar">Finalizar Pedido</button>
+    </div>
 </div>
 
-<!-- Checkout Modal -->
 <div id="modalCheckout" class="modalCarrinho oculto">
-  <div class="modalContent">
-    <h2>🧾 Resumo do Pedido</h2>
-    <div id="resumoPedido"></div>
-    <button id="btnConfirmar">✅ Enviar via WhatsApp</button>
-    <button id="btnVoltar">⬅️ Voltar</button>
-  </div>
+    <div class="modalContent">
+        <h2>🧾 Resumo do Pedido</h2>
+        <div id="resumoPedido"></div>
+        
+                <div id="freteGratisAviso" class="frete-aviso oculto">
+            🎉 Parabéns! Você atingiu **FRETE GRÁTIS**!
+        </div>
+
+        <button id="btnConfirmar">✅ Enviar via WhatsApp</button>
+        <button id="btnVoltar">⬅️ Voltar</button>
+    </div>
 </div>
 
 <footer>
-  <p>📍 FitMangue | Mangueiral - Brasília, DF</p>
-  <p>📞 <a href="https://wa.me/5561999999999" target="_blank">Fale conosco no WhatsApp</a></p>
+        <p>📍 FitMangue | Mangueiral - Brasília, DF</p>
+    <p>📞 <a href="https://wa.me/5561981801192" target="_blank">Fale conosco no WhatsApp</a></p>
 </footer>
 
 <script src="script.js"></script>

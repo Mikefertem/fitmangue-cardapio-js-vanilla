@@ -1,17 +1,30 @@
 /* Reset e base */
-* { 
-    margin:0; 
-    padding:0; 
-    box-sizing:border-box; 
-    font-family:'Poppins',sans-serif; 
-    scroll-behavior:smooth; 
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&family=Kalam:wght@400;700&display=swap');
+
+*,
+*::before,
+*::after { 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; 
 }
-body { 
+
+html {
+    scroll-behavior: smooth; 
+}
+
+body {
+    font-family: 'Quicksand', sans-serif;
     background:#f4f8f4; 
     color:#333; 
     transition:0.3s; 
-    line-height:1.5; 
+    line-height:1.6; /* Leitura melhorada */
 }
+
+h1 {
+    font-family: 'Kalam', cursive;
+}
+
 a { 
     text-decoration:none; 
     color:inherit; 
@@ -19,78 +32,134 @@ a {
 button { 
     cursor:pointer; 
 }
+
+/* Modo Escuro */
 .dark-mode { 
     background:#121212; 
     color:#eee; 
 }
-
-/* Header */
-header { 
-    background:#000000; 
-    color:#fff; 
-    display:flex; 
-    justify-content:space-between; 
-    align-items:center; 
-    padding:20px; 
-    position:sticky; 
-    top:0; 
-    z-index:1000; 
+.dark-mode .produto {
+    background: #1e1e1e;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
 }
-header h1 { 
-    font-size:1.8rem; 
-}
-.header-btns button { 
-    margin-left:8px; 
-    padding:8px 12px; 
-    border:none; 
-    border-radius:8px; 
-    background:white; 
-    color:#27ae60; 
-    transition:0.3s; 
-}
-.header-btns button:hover { 
-    background:#22c55e; 
-    color:white; 
-    transform:scale(1.05); 
+.dark-mode .produto p.descricao, .dark-mode .produto p.calorias {
+    color: #bbb;
 }
 
-/* Hero Banner (MODIFICADO) */
+/* ---------- Header (LOGO e BOTÕES) ---------- */
+header {
+    background: #000000;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 25px;
+    position: sticky; /* Mantém o header no topo */
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo img#logoImg {
+    width: 55px; /* Tamanho padrão para desktop/logo */
+    height: auto;
+    object-fit: contain;
+    border-radius: 8px;
+    max-width: 100%;
+    transition: transform 0.3s ease;
+}
+
+.logo img#logoImg:hover {
+    transform: scale(1.05);
+}
+
+.logo h1 {
+    font-size: 1.8rem; /* Tamanho padrão para desktop */
+    font-weight: 600;
+    color: #22c55e;
+    margin: 0;
+    letter-spacing: 1px;
+}
+
+.header-btns {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.header-btns button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 8px;
+    background: white;
+    color: #27ae60;
+    transition: 0.3s;
+    font-size: 1rem;
+}
+
+.header-btns button:hover {
+    background: #22c55e;
+    color: white;
+    transform: scale(1.05);
+}
+
+/* ---------- Hero Banner (SÓ IMAGENS) ---------- */
 .hero { 
-    height:450px; 
-    display:flex; 
-    align-items:center; 
-    justify-content:center; 
-    text-align:center; 
-    color:#fff; 
-    overflow:hidden; 
+    height: 450px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    text-align: center; 
+    color: #fff; 
+    overflow: hidden; 
     
-    /* 1. Múltiplos Backgrounds: Imagem e Gradiente */
-    background: 
-        /* 1º Layer: A imagem de fundo (usando um placeholder de legumes) */
-        url('https://images.unsplash.com/photo-1543353071-873f17a7a088?fit=crop&w=1400&q=80') center center / cover no-repeat, 
-        
-        /* 2º Layer: O Gradiente de Transição de Cores */
-        linear-gradient(270deg,#6b21a8,#22c55e,#6b21a8); 
+    background-position: center center;
+    background-size: cover;
     
-    /* 2. Propriedade que mistura a imagem com o gradiente animado */
-    background-blend-mode: overlay; /* 'overlay' é um bom ponto de partida. Tente 'soft-light' se quiser mais suave. */
+    /* Aplicamos APENAS a animação de troca de imagens. */
+    animation: changeHeroImage 15s infinite;
+}
+
+/* Animação para a troca de 3 imagens de fundo (LIMPA) */
+@keyframes changeHeroImage {
+    /* 0% a 33.33%: IMAGEM 1 */
+    0% { 
+        background-image: url('../img/ComidaFitBanner.jpg');
+    }
     
-    /* 3. Mantém a animação de gradiente */
-    background-size: 600% 600%; 
-    animation: gradientBG 15s ease infinite; 
+    /* 33.33% a 66.66%: IMAGEM 2 */
+    33.33% { 
+        background-image: url('../img/ComidaFitBanner2.jpg'); 
+    }
+
+    /* 66.66% a 100%: IMAGEM 3 */
+    66.66% { 
+        background-image: url('../img/ComidaFitBanner3.jpg'); 
+    }
+    
+    /* Volta para o 0% */
+    100% {
+        background-image: url('../img/ComidaFitBanner.jpg'); 
+    }
 }
 
 .hero-text h2 { 
     font-size:2rem; 
     margin-bottom:10px; 
     animation: slideDown 1s ease-in; 
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Adicionado para melhorar a leitura */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
 }
 .hero-text p { 
     margin-bottom:15px; 
     opacity:0.9; 
     animation: slideUp 1s ease-in; 
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7); /* Adicionado para melhorar a leitura */
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
 }
 .hero-text button { 
     background:#fff; 
@@ -136,6 +205,7 @@ header h1 {
     transform: translateY(30px); 
     cursor:pointer; 
     position:relative; 
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 .produto.show { 
     opacity:1; 
@@ -166,7 +236,7 @@ header h1 {
     transform:scale(1.08); 
 }
 
-/* Selo Mais Vendido */
+/* Selo Mais Vendido/Destaque */
 .selo { 
     position:absolute; 
     top:10px; 
@@ -177,20 +247,158 @@ header h1 {
     border-radius:5px; 
     font-size:0.8rem; 
     font-weight:bold; 
+    z-index: 5;
 }
 
-/* Descrição e calorias */
+/* Descrição e preço/calorias */
 .produto p.descricao { 
     font-size:0.9rem; 
     color:#555; 
     margin:5px 0; 
+    min-height: 40px; 
 }
 .produto p.calorias { 
     font-size:0.85rem; 
     color:#888; 
+    margin-bottom: 10px;
+}
+.produto p.preco-principal {
+    font-size: 1.2rem;
+    color: #000;
+    margin-bottom: 15px;
 }
 
-/* Modal Carrinho e Checkout */
+/* --- ESTILOS PARA KITS E OPÇÕES --- */
+.opcoes-container {
+    background: #e6ffec; 
+    border: 1px solid #22c55e;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 30px;
+    text-align: left;
+    grid-column: 1 / -1; 
+}
+.dark-mode .opcoes-container {
+    background: #0d1a0d;
+    border-color: #16a34a;
+}
+.dark-mode .opcoes-container h3 {
+    color: #22c55e;
+}
+.opcoes-container h3 {
+    color: #16a34a;
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    text-align: center;
+    font-family: 'Kalam', cursive;
+}
+.lista-opcoes {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 10px;
+    margin-bottom: 15px;
+}
+.lista-opcoes li {
+    background: #fff;
+    padding: 10px 15px;
+    border-radius: 6px;
+    border-left: 5px solid #22c55e;
+    font-size: 0.95rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.dark-mode .lista-opcoes li {
+    background: #222;
+    color: #eee;
+}
+.aviso-kit {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #666;
+    font-style: italic;
+    margin-top: 10px;
+}
+.dark-mode .aviso-kit {
+    color: #aaa;
+}
+
+/* --- ESTILOS DE INFORMAÇÃO E ENTREGA --- */
+.info-secoes {
+    width: 90%; 
+    max-width: 1200px; 
+    margin: 40px auto; 
+    display: flex;
+    flex-wrap: wrap; 
+    gap: 20px;
+    justify-content: center; 
+}
+.info-box {
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    flex: 1 1 45%; 
+    min-width: 300px; 
+    transition: background 0.3s, color 0.3s, border 0.3s;
+}
+.info-box .info-titulo {
+    font-family: 'Kalam', cursive;
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid;
+}
+.atencao {
+    background: #fff3f3; 
+    border: 1px solid #ff0000;
+    color: #cc0000; 
+}
+.atencao .info-titulo {
+    color: #cc0000;
+    border-color: #ff0000;
+}
+.entrega {
+    background: #ebf5ff; 
+    border: 1px solid #0056b3;
+    color: #0056b3;
+}
+.entrega .info-titulo {
+    color: #0056b3;
+    border-color: #0056b3;
+}
+.entrega h4 {
+    margin-top: 10px;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+.entrega ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 10px;
+}
+.tabela-taxas {
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px dashed #0056b3;
+}
+.tabela-taxas ul li strong {
+    font-weight: 800;
+    color: #22c55e;
+}
+.dark-mode .atencao {
+    background: #381212;
+    border-color: #ff5555;
+    color: #ff8888;
+}
+.dark-mode .entrega {
+    background: #111a26;
+    border-color: #4a90e2;
+    color: #79bfff;
+}
+.dark-mode .tabela-taxas ul li strong {
+    color: #5effa5;
+}
+
+/* --- MODAIS (CARRINHO E CHECKOUT) --- */
 .modalCarrinho { 
     position: fixed; 
     top: 0; 
@@ -206,7 +414,13 @@ header h1 {
     align-items:center; 
 }
 .modalCarrinho.show { 
-    width:100%; 
+    width:100%;
+    opacity: 1;
+    pointer-events: auto;
+}
+.modalCarrinho.oculto {
+    opacity: 0;
+    pointer-events: none;
 }
 .modalContent { 
     background:#fff; 
@@ -224,7 +438,6 @@ body.dark-mode .modalContent {
     background:#1e1e1e; 
     color:#eee; 
 }
-
 #fecharCarrinho { 
     position:absolute; 
     top:10px; 
@@ -237,49 +450,73 @@ body.dark-mode .modalContent {
     color:red; 
     transform:scale(1.2); 
 }
-
 #itensCarrinho { 
     list-style:none; 
     margin-bottom:15px; 
     max-height:200px; 
     overflow-y:auto; 
+    padding-right: 5px; 
 }
 #itensCarrinho li { 
     margin-bottom:10px; 
     display:flex; 
     justify-content:space-between; 
     align-items:center; 
+    padding-bottom: 5px;
+    border-bottom: 1px solid #eee;
+}
+.dark-mode #itensCarrinho li {
+    border-bottom: 1px solid #333;
+}
+.modalContent button#btnFinalizar, 
+.modalContent button#btnConfirmar, 
+.modalContent button#btnVoltar {
+    width: 100%;
+    margin-top: 10px;
+}
+#pagamento {
+    width: 100%;
+    padding: 8px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+}
+.dark-mode #pagamento {
+    background: #333;
+    color: #eee;
+    border-color: #555;
 }
 
-.modalContent button { 
-    background:#22c55e; 
-    color:#fff; 
-    border:none; 
-    padding:10px 15px; 
-    border-radius:8px; 
-    cursor:pointer; 
-    transition:0.2s; 
+/* NOVO ESTILO: AVISO DE FRETE GRÁTIS NO CHECKOUT */
+.frete-aviso {
+    text-align: center;
+    padding: 10px;
+    margin: 15px 0;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #0c7a36; 
+    background: #e6ffe6; 
+    border: 2px dashed #22c55e;
 }
-.modalContent button:hover { 
-    background:#16a34a; 
-    transform:scale(1.05); 
+.frete-aviso.oculto {
+    display: none;
+}
+.dark-mode .frete-aviso {
+    color: #5effa5;
+    background: #112611;
+    border-color: #5effa5;
 }
 
-#itensCarrinho::-webkit-scrollbar { 
-    width:6px; 
-}
-#itensCarrinho::-webkit-scrollbar-thumb { 
-    background:#27ae60; 
-    border-radius:3px; 
-}
-
-/* Footer */
+/* Footer (RODAPÉ) */
 footer { 
     text-align:center; 
     padding:20px; 
     background:#060606; 
     color:#fff; 
     margin-top:40px; 
+    box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.3);
 }
 footer a { 
     color:#fff; 
@@ -287,11 +524,6 @@ footer a {
 }
 
 /* Animações */
-@keyframes gradientBG { 
-    0%{background-position:0% 50%}
-    50%{background-position:100% 50%}
-    100%{background-position:0% 50%} 
-}
 @keyframes slideDown { 
     from{transform:translateY(-20px);} 
     to{transform:translateY(0);} 
@@ -301,9 +533,54 @@ footer a {
     to{transform:translateY(0);} 
 }
 
-/* Mobile */
+/* Mobile Responsiveness (CORREÇÃO DE LAYOUT) */
 @media(max-width:768px){ 
+    /* Garante que o cabeçalho fica limpo no mobile */
+    header {
+        padding: 10px 15px; /* Reduz o padding */
+        /* display: flex; (mantido por padrão, essencial para o alinhamento) */
+    }
+
+    /* Ajusta o tamanho da logo no mobile */
+    .logo img#logoImg {
+        width: 45px;
+    }
+
+    /* Ajusta o texto da logo no mobile */
+    .logo h1 {
+        font-size: 1.5rem;
+    }
+
+    /* Ajusta o tamanho dos botões do header (carrinho/tema) */
+    .header-btns button {
+        padding: 6px 10px;
+        font-size: 0.9rem;
+    }
+    
+    /* Reduz o tamanho do banner Hero */
+    .hero {
+        height: 300px;
+    }
+
+    .hero-text h2 {
+        font-size: 1.5rem;
+    }
+    .hero-text p {
+        font-size: 0.9rem;
+    }
+    
+    /* Outros ajustes de layout */
     .modalContent { 
         width:95%; 
-    } 
+    }
+    .lista-opcoes {
+        grid-template-columns: 1fr;
+    }
+    .info-secoes {
+        flex-direction: column; 
+        gap: 25px;
+    }
+    .info-box {
+        flex: 1 1 100%;
+    }
 }

@@ -1,130 +1,301 @@
-// Produtos com descrição, calorias e selo
-const produtos = [
-  { nome:"Clássica", preco:22, img:"img/frangoGrelhado.jpg", descricao:"Frango, arroz integral, legumes e salada.", calorias:450, maisVendido:true },
-  { nome:"Low Carb", preco:25, img:"img/lowCarb.jpg", descricao:"Frango grelhado, legumes e ovo.", calorias:380, maisVendido:false },
-  { nome:"Vegana", preco:24, img:"img/salmaoGrelhado.png", descricao:"Quinoa, legumes e grão de bico.", calorias:350, maisVendido:false }
+// ===========================================
+// 1. DADOS DE OPÇÕES DAS MARMITAS (Referência para o cliente)
+// ===========================================
+const opcoesMarmitas = [
+    "Frango Desfiado (Arroz integral/branco, Lentilha com grão de bico)",
+    "Estrogonofe de Frango (Batata saltê, Abobrinha, Lentilha)",
+    "Almôndegas ao Molho (Purê de batata inglesa, Vagem e brócolis)",
+    "Carne Moída (Purê de batata doce, Grão de bico)",
+    "Picadinho de Músculo (Arroz integral/branco, Vagem com cenoura)",
+    "Filé de Frango Grelhado (Arroz integral/branco, Cenoura e brócolis)",
+    "Lasanha de Abobrinha (Carne moída, arroz integral/branco, mix de legumes)" 
 ];
 
+// ===========================================
+// 2. DADOS DO CARDÁPIO PRINCIPAL (Kits e Produtos Avulsos)
+// ===========================================
+const produtos = [
+    {
+        id: 101,
+        nome: "KIT 5 MARMITAS",
+        descricao: "5x Marmitas de 400g. Escolha entre as 7 opções disponíveis. *Melhor custo-benefício!*",
+        calorias: "R$ 26,80/unidade",
+        preco: 134.00,
+        imagem: "img/frangoGrelhado.jpg", // Substitua pelo seu caminho de imagem
+        destaque: true
+    },
+    {
+        id: 102,
+        nome: "KIT 10 MARMITAS",
+        descricao: "10x Marmitas de 400g. Escolha entre as 7 opções disponíveis. Entrega em duas datas diferentes!",
+        calorias: "R$ 25,90/unidade",
+        preco: 259.00,
+        imagem: "img/lowCarb.jpg", // Substitua pelo seu caminho de imagem
+        destaque: true
+    },
+    {
+        id: 103,
+        nome: "KIT 20 MARMITAS",
+        descricao: "20x Marmitas de 400g. Escolha entre as 7 opções disponíveis. *Grande desconto!*",
+        calorias: "R$ 24,90/unidade",
+        preco: 498.00,
+        imagem: "img/assadoCardapio.jpg", // Substitua pelo seu caminho de imagem
+        destaque: false
+    },
+    {
+        id: 201,
+        nome: "LASANHA DE ABOBRINHA (Avulsa)",
+        descricao: "Marmita Avulsa de Lasanha de abobrinha com carne moída. Pague no PIX e ganhe 5% OFF!",
+        calorias: "Marmita de 400g",
+        preco: 29.90,
+        imagem: "img/pexinCardapio.png", // Substitua pelo seu caminho de imagem
+        destaque: true
+    }
+];
+
+// ===========================================
+// 3. VARIÁVEIS E SELETORES
+// ===========================================
 let carrinho = [];
-const listaProdutos = document.getElementById("listaProdutos");
-const itensCarrinho = document.getElementById("itensCarrinho");
-const totalCarrinho = document.getElementById("totalCarrinho");
-const qtdCarrinho = document.getElementById("qtdCarrinho");
-const modalCarrinho = document.getElementById("modalCarrinho");
-const modalCheckout = document.getElementById("modalCheckout");
-const resumoDiv = document.getElementById("resumoPedido");
+const VALOR_MINIMO_FRETE_GRATIS = 299.00; // Valor para ativar o Frete Grátis
 
-// Renderiza produtos
-produtos.forEach((p, i) => {
-  const div = document.createElement("div");
-  div.classList.add("produto");
-  div.innerHTML = `
-    ${p.maisVendido ? '<div class="selo">Mais Vendido</div>' : ''}
-    <img src="${p.img}" alt="${p.nome}">
-    <h3>${p.nome}</h3>
-    <p class="descricao">${p.descricao}</p>
-    <p class="calorias">${p.calorias} kcal</p>
-    <p>R$ ${p.preco.toFixed(2)}</p>
-    <button>Adicionar</button>
-  `;
-  listaProdutos.appendChild(div);
-  setTimeout(() => div.classList.add("show"), i * 200);
-  div.querySelector("button").addEventListener("click", () => adicionarAoCarrinho(p));
-});
+const produtosMap = new Map(produtos.map(p => [p.id, p])); 
 
-// Atualiza carrinho
+const listaProdutosEl = document.getElementById("listaProdutos");
+const itensCarrinhoEl = document.getElementById("itensCarrinho");
+const totalCarrinhoEl = document.getElementById("totalCarrinho");
+const qtdCarrinhoEl = document.getElementById("qtdCarrinho");
+const modalCarrinhoEl = document.getElementById("modalCarrinho");
+const modalCheckoutEl = document.getElementById("modalCheckout");
+const resumoDivEl = document.getElementById("resumoPedido");
+const pagamentoSelectEl = document.getElementById("pagamento");
+const freteAvisoEl = document.getElementById("freteGratisAviso"); // Novo seletor
+
+// ===========================================
+// 4. FUNÇÕES UTILITÁRIAS
+// ===========================================
+
+const formatarReal = valor => `R$ ${valor.toFixed(2).replace('.', ',')}`;
+
+const toggleModal = (modal, show) => {
+    modal.classList.toggle("show", show);
+    modal.classList.toggle("oculto", !show);
+};
+
+// ===========================================
+// 5. LÓGICA DO CARRINHO E FRETE
+// ===========================================
+
+function calcularTotal() {
+    return carrinho.reduce((total, item) => total + (item.preco * item.quantidade), 0);
+}
+
+function updateCheckoutFreteAviso(totalCompra) {
+    if (totalCompra >= VALOR_MINIMO_FRETE_GRATIS) {
+        freteAvisoEl.classList.remove('oculto');
+    } else {
+        freteAvisoEl.classList.add('oculto');
+    }
+}
+
+
+function adicionarAoCarrinho(produtoId) {
+    const id = parseInt(produtoId);
+    const produtoBase = produtosMap.get(id);
+
+    if (!produtoBase) return;
+
+    let itemCarrinho = carrinho.find(item => item.id === id);
+
+    if (itemCarrinho) {
+        itemCarrinho.quantidade++;
+    } else {
+        carrinho.push({ ...produtoBase, id: id, quantidade: 1 });
+    }
+    
+    atualizarCarrinho();
+    toggleModal(modalCarrinhoEl, true);
+    animacaoBotao();
+}
+
+function removerItem(produtoId) {
+    const id = parseInt(produtoId);
+    const index = carrinho.findIndex(item => item.id === id);
+
+    if (index > -1) {
+        carrinho[index].quantidade--;
+        if (carrinho[index].quantidade === 0) {
+            carrinho.splice(index, 1); 
+        }
+    }
+    atualizarCarrinho();
+    animacaoBotao();
+}
+
 function atualizarCarrinho() {
-  itensCarrinho.innerHTML = "";
-  let total = 0;
-  carrinho.forEach((item, i) => {
-    const li = document.createElement("li");
-    li.innerHTML = `${item.nome} - R$ ${item.preco.toFixed(2)} <button onclick="removerItem(${i})">❌</button>`;
-    itensCarrinho.appendChild(li);
-    total += item.preco;
-  });
-  totalCarrinho.innerHTML = `<strong>Total:</strong> R$ ${total.toFixed(2)}`;
-  qtdCarrinho.textContent = carrinho.length;
-}
+    itensCarrinhoEl.innerHTML = "";
+    let totalGeral = calcularTotal();
+    let qtdTotal = 0;
 
-function adicionarAoCarrinho(produto) {
-  carrinho.push(produto);
-  atualizarCarrinho();
-  modalCarrinho.classList.remove("oculto");
-  modalCarrinho.classList.add("show");
-  animacaoBotao();
-}
+    carrinho.forEach(item => {
+        const subtotal = item.preco * item.quantidade;
+        qtdTotal += item.quantidade;
 
-function removerItem(i) {
-  carrinho.splice(i, 1);
-  atualizarCarrinho();
-  animacaoBotao();
+        const li = document.createElement("li");
+        li.innerHTML = `
+            ${item.nome} (x${item.quantidade}) - ${formatarReal(subtotal)}
+            <button onclick="removerItem(${item.id})">❌</button>
+        `;
+        itensCarrinhoEl.appendChild(li);
+    });
+
+    totalCarrinhoEl.innerHTML = `<strong>Total:</strong> ${formatarReal(totalGeral)}`;
+    qtdCarrinhoEl.textContent = qtdTotal;
+    
+    // AVISO: A lógica de Frete Grátis é chamada aqui também, para atualizar caso o valor mude no carrinho.
+    updateCheckoutFreteAviso(totalGeral); 
 }
 
 function animacaoBotao() {
-  qtdCarrinho.style.transform = "scale(1.3)";
-  setTimeout(() => {
-    qtdCarrinho.style.transform = "scale(1)";
-  }, 200);
+    qtdCarrinhoEl.style.transform = "scale(1.3)";
+    setTimeout(() => {
+        qtdCarrinhoEl.style.transform = "scale(1)";
+    }, 200);
 }
 
-// Abrir/Fechar carrinho
-document.getElementById("btnCarrinho").addEventListener("click", () => {
-  modalCarrinho.classList.remove("oculto");
-  modalCarrinho.classList.add("show");
-});
+// ===========================================
+// 6. RENDERIZAÇÃO E DETALHES VISUAIS
+// ===========================================
 
-document.getElementById("btnHero").addEventListener("click", () => {
-  modalCarrinho.classList.remove("oculto");
-  modalCarrinho.classList.add("show");
-});
+function renderizarProdutos() {
+    listaProdutosEl.innerHTML = '';
+    
+    // 1. Renderiza a tabela de Opções 
+    listaProdutosEl.innerHTML += `
+        <div class="opcoes-container">
+            <h3>Nossas 7 Opções de Marmitas (400g)</h3>
+            <ul class="lista-opcoes">
+                ${opcoesMarmitas.map(opcao => `<li>✅ ${opcao}</li>`).join('')}
+            </ul>
+            <p class="aviso-kit">
+                *As opções acima são para escolha **após** a compra de um Kit, via WhatsApp.*
+                <br>Pedidos avulsos são apenas a Lasanha.
+            </p>
+        </div>
+    `;
 
-document.getElementById("fecharCarrinho").addEventListener("click", () => {
-  modalCarrinho.classList.remove("show");
-  modalCarrinho.classList.add("oculto");
-});
-
-// Modo escuro
-const btnTheme = document.getElementById("toggleTheme");
-if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
-  document.body.classList.add("dark-mode");
+    // 2. Renderiza os Kits e Lasanha Avulsa 
+    produtos.forEach((p, i) => {
+        const div = document.createElement("div");
+        div.setAttribute('data-id', p.id); 
+        div.classList.add("produto");
+        
+        div.innerHTML = `
+            ${p.destaque ? '<div class="selo">DESTAQUE</div>' : ''}
+            <img src="${p.imagem}" alt="${p.nome}">
+            <h3>${p.nome}</h3>
+            <p class="descricao">${p.descricao}</p>
+            <p class="calorias">${p.calorias}</p>
+            <p class="preco-principal"><strong>${formatarReal(p.preco)}</strong></p>
+            <button data-id="${p.id}">Adicionar ao Pedido</button>
+        `;
+        listaProdutosEl.appendChild(div);
+        
+        setTimeout(() => div.classList.add("show"), i * 200);
+        
+        div.querySelector("button").addEventListener("click", (e) => {
+            const produtoId = e.target.getAttribute('data-id');
+            adicionarAoCarrinho(produtoId);
+        });
+    });
 }
-btnTheme.addEventListener("click", () => document.body.classList.toggle("dark-mode"));
 
-// Checkout e WhatsApp
-const btnFinalizar = document.getElementById("btnFinalizar");
-btnFinalizar.addEventListener("click", () => {
-  if (carrinho.length === 0) {
-    alert("Seu carrinho está vazio!");
-    return;
-  }
+// Inicializa a renderização
+document.addEventListener('DOMContentLoaded', () => {
+    renderizarProdutos();
+    atualizarCarrinho();
+});
 
-  modalCarrinho.classList.remove("show");
-  modalCheckout.classList.remove("oculto");
-  modalCheckout.classList.add("show");
+// ===========================================
+// 7. CHECKOUT E WHATSAPP
+// ===========================================
 
-  const pagamento = document.getElementById("pagamento").value;
-  let resumo = "";
-  let total = 0;
+document.getElementById("btnFinalizar").addEventListener("click", () => {
+    const total = calcularTotal();
+    if (total === 0) {
+        alert("Seu carrinho está vazio! Adicione kits antes de finalizar.");
+        return;
+    }
+    
+    toggleModal(modalCarrinhoEl, false);
+    toggleModal(modalCheckoutEl, true);
+    
+    const pagamento = pagamentoSelectEl.value;
+    let resumoTexto = `*NOVO PEDIDO BOTANICFIT (KITS)*\n\n`;
+    let resumoHTML = '<ul>';
 
-  carrinho.forEach(item => {
-    resumo += `• ${item.nome} - R$ ${item.preco.toFixed(2)}\n`;
-    total += item.preco;
-  });
+    carrinho.forEach(item => {
+        const subtotal = item.preco * item.quantidade;
+        resumoTexto += `• ${item.nome} (x${item.quantidade}) - ${formatarReal(subtotal)}\n`;
+        resumoHTML += `<li>${item.nome} (x${item.quantidade}) - ${formatarReal(subtotal)}</li>`;
+    });
+    
+    resumoHTML += '</ul>';
+    resumoHTML += `<p><strong>Total da Compra:</strong> ${formatarReal(total)}</p>`;
+    
+    // Lógica de Frete no Checkout
+    if (total >= VALOR_MINIMO_FRETE_GRATIS) {
+        resumoHTML += `<p style="color: green; font-weight: bold;">✅ Frete Grátis Atingido!</p>`;
+        resumoTexto += `\n*FRETE:* GRÁTIS`;
+    } else {
+        resumoHTML += `<p>Taxa de entrega será adicionada ao total final.</p>`;
+        resumoTexto += `\n*FRETE:* A calcular (Conforme região)`;
+    }
 
-  resumo += `\n💰 Total: R$ ${total.toFixed(2)}\n📦 Pagamento: ${pagamento}`;
-  resumoDiv.innerText = resumo;
+    resumoHTML += `<p><strong>Pagamento:</strong> ${pagamento}</p>`;
+    resumoHTML += `<p class="aviso-kit">**Após o envio, entraremos em contato para coletar as opções de marmita desejadas.**</p>`;
+
+    resumoDivEl.innerHTML = resumoHTML;
+    
+    resumoTexto += `\n*TOTAL FINAL:* ${formatarReal(total)}\n*Pagamento:* ${pagamento}\n\n*Aguardando dados para entrega (Nome, Endereço e Opções de Marmita):*`;
+    resumoDivEl.setAttribute('data-whatsapp-text', resumoTexto);
+    
+    // Garante que o aviso de frete dinâmico é exibido/ocultado corretamente
+    updateCheckoutFreteAviso(total);
 });
 
 document.getElementById("btnConfirmar").addEventListener("click", () => {
-  const telefone = "5561999999999"; // <-- coloque aqui seu número WhatsApp real
-  const texto = encodeURIComponent(resumoDiv.innerText);
-  const link = `https://wa.me/${telefone}?text=${texto}`;
-  window.open(link, "_blank");
+    const telefone = "5561981801192";
+    const textoCompleto = resumoDivEl.getAttribute('data-whatsapp-text');
+    const link = `https://wa.me/${telefone}?text=${encodeURIComponent(textoCompleto)}`;
+    window.open(link, "_blank");
 });
 
 document.getElementById("btnVoltar").addEventListener("click", () => {
-  modalCheckout.classList.remove("show");
-  modalCheckout.classList.add("oculto");
-  modalCarrinho.classList.remove("oculto");
-  modalCarrinho.classList.add("show");
+    toggleModal(modalCheckoutEl, false);
+    toggleModal(modalCarrinhoEl, true);
+});
+
+// Event Listeners Finais
+document.getElementById("btnCarrinho").addEventListener("click", () => {
+    atualizarCarrinho();
+    toggleModal(modalCarrinhoEl, true);
+});
+
+document.getElementById("fecharCarrinho").addEventListener("click", () => {
+    toggleModal(modalCarrinhoEl, false);
+});
+
+document.getElementById("toggleTheme").addEventListener("click", () => {
+    document.body.classList.toggle("dark-mode");
+});
+
+document.getElementById("btnHero").addEventListener("click", () => {
+    document.querySelector('.container').scrollIntoView({ behavior: 'smooth' });
+});
+
+[modalCarrinhoEl, modalCheckoutEl].forEach(modal => {
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) toggleModal(modal, false);
+    });
 });
